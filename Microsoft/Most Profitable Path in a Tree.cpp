@@ -4,15 +4,14 @@ using namespace std;
 class Graph {
 public:
   int nodes;
-  vector<vector<int>> adj;
+  vector<int> *adj;
   vector<int> amount;
-  vector<bool> used;
 
-  Graph(int n, vector<int> amt) {
-    nodes = n;
-    adj.resize(n);
-    amount = amt;
-    used.resize(nodes, false);
+  Graph(int nodes, vector<int> amount) {
+    // Initialising the graph class
+    this->nodes = nodes;
+    adj = new vector<int>[this->nodes];
+    this->amount = amount;
   }
 
   void add_edge(int u, int v) {
@@ -25,6 +24,7 @@ public:
     vector<int> entry(nodes, -1);
     vector<int> parent(nodes);
 
+    // Using BFS to find the shortest path from bob to root.
     queue<int> pendingNodes;
     parent[u] = -1;
     pendingNodes.push(u);
@@ -57,7 +57,10 @@ public:
 
   int maxProfit(int u, int par, int time, map<int, int> &entry) {
     int val = 0;
+    // Worst possible profit
     int ans = -1e9 - 5;
+
+    // Getting the correct value from this node as per path of bob
     if (entry.count(u)) {
       if (time < entry[u]) {
         val = amount[u];
@@ -67,11 +70,14 @@ public:
     } else {
       val = amount[u];
     }
+
+    // Calculating the profit for subsequent children
     for (int v : adj[u]) {
       if (v == par)
         continue;
       ans = max(ans, maxProfit(v, u, time + 1, entry));
     }
+    // If we are at a leaf node
     if (ans <= -1e9 - 5) {
       ans = 0;
     }
