@@ -30,7 +30,6 @@ public:
     }
     vector<int> res;
     int largest_subset_index = max_element(dp, dp + n) - dp;
-    int largest_subset_element = nums[largest_subset_index];
     for (int i = largest_subset_index; i != -1; i = ans[i]) {
       res.push_back(nums[i]);
     }
